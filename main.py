@@ -193,6 +193,7 @@ class MainWindow(QMainWindow):
             self.error_product_interactiveHtml()
 
     def submit_CheckEnvironment_Interactive(self):
+        self.setWindowTitle("Production: Interactive Html Bom Installer")
         if "HOME" in os.environ:
             target_path = os.path.join(os.environ['HOME'], "pcbenv")
         else:
