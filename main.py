@@ -71,6 +71,7 @@ class MainWindow(QMainWindow):
     def submit_product(self):
         if self.ui.lineEdit_PendingIdentityID.text() != "" and self.ui.lineEdit_ActiveID.text() != "":
             if self.ui.comboBox_SelectProduct.currentIndex() == 0:
+                self.setWindowTitle("Production: Interactive Html Bom Installer")
                 self.ui.stackedWidget.setCurrentIndex(self.page_interactiveHtml)
                 self.ui.pushButton_CheckEnvironment.setEnabled(True)
             else:
@@ -193,7 +194,6 @@ class MainWindow(QMainWindow):
             self.error_product_interactiveHtml()
 
     def submit_CheckEnvironment_Interactive(self):
-        self.setWindowTitle("Production: Interactive Html Bom Installer")
         if "HOME" in os.environ:
             target_path = os.path.join(os.environ['HOME'], "pcbenv")
         else:
@@ -224,6 +224,8 @@ class MainWindow(QMainWindow):
             self.ui.lineEdit_CadenceDirectory.setEnabled(False)
             self.allowInstall_InteractiveHtml = True
             self.ui.pushButton_InstallPatch.setEnabled(True)
+            self.InteractiveHtmlBomStatus = QPixmap(self.redirect_res("./src/blobdoctor.png"))
+            self.ui.label_Emoji.setPixmap(self.InteractiveHtmlBomStatus)
             self.ui.label_status.setText("Check Environment Pass!")
             self.ui.pushButton_CheckEnvironment.setEnabled(False)
         else:
