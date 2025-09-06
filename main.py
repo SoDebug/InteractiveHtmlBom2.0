@@ -223,9 +223,11 @@ class MainWindow(QMainWindow):
             self.ui.lineEdit_CadenceDirectory.setEnabled(False)
             self.allowInstall_InteractiveHtml = True
             self.ui.pushButton_InstallPatch.setEnabled(True)
+            self.ui.label_status.setText("Check Environment Pass!")
+            self.ui.pushButton_CheckEnvironment.setEnabled(False)
         else:
             self.error = "Check Environment Failed!"
-            self.ui.label_info.setText("Not Found Cadence Production")
+            self.ui.label_status.setText("Not Found Cadence Production")
             self.allowInstall_InteractiveHtml = False
             self.ui.pushButton_InstallPatch.setEnabled(False)
             self.error_product_interactiveHtml()
