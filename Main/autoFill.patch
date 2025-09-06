@@ -1,0 +1,69 @@
+diff --git a/exportJson.il b/exportJson.il
+index 4597bfc..31923f5 100644
+--- a/exportJson.il
++++ b/exportJson.il
+@@ -2,13 +2,21 @@ axlCmdRegister( "exportJson" `exportJson )
+ 
+ procedure( addMetadata( dsnName rev company )
+     let( ( metadata )    
+-
++	tm = timeToTm(stringToTime(getCurrentTime()))
+         when( rev == ""
+-            rev = axlUIPrompt( strcat( "Enter Revision for " dsnName ":" ) )          
++            ;rev = axlUIPrompt( strcat( "Enter Revision for " dsnName ":" ) )          
++            rev = sprintf(nil,"%2d%2d%2d",tm->tm_year+1900,tm->tm_mon + 1,tm->tm_mday)
++            rexCompile(" ")
++            rev= rexReplace(rev,"0",0) 
+         )
+ 
+         when( company == ""
+-            company =  axlUIPrompt( "Enter company name:" )                    
++            ;company =  axlUIPrompt( "Enter company name:" )                    
++            (if axlDBGetDesign()->prop->SCHEMATIC_NAME then
++                company =  strcat("DSN:" axlDBGetDesign()->prop->SCHEMATIC_NAME)   
++            else
++                company =  "Layout:zsking"   
++            );end if
+         )
+         
+         rev = strcat( "\"" rev "\"" )
+@@ -3038,9 +3046,36 @@ procedure( exportJson( @key ( exportInnerLayers nil ) ( renderViaHoles nil ) ( t
+             writeJsonFile( ?exportInnerLayers exportInnerLayers ?renderViaHoles renderViaHoles ?textsAsSvgPaths textsAsSvgPaths
+                 ?pcbLinewidth pcbLinewidth ?fabricationLayerLinewidth fabricationLayerLinewidth ?silkscreenLayerLinewidth silkscreenLayerLinewidth ?margin margin
+                 ?rev rev ?company company ?layerMapping config )
++		zsking_addtion_exerunning( )
+         )
+ 
+         ; restore view
+         axlVisibleSet( visList )
+     )
+-)
+\ No newline at end of file
++)
++
++(procedure zsking_addtion_exerunning()
++    (let (skillPath pythonfile pythonexe parmeter jsonDic  jsonfile cmd res htmlfile newFile)
++        ;exportJson 文件夹所在位置，通过环境变量的方式，做动态识别
++        skillPath = truename("~")
++        sprintf(pythonfile "%s/pcbenv/InteractiveHtmlBom/InteractiveHtmlBom/generate_interactive_bom.py" skillPath)
++        sprintf(pythonexe "%s/pcbenv/InteractiveHtmlBom/runtime/python.exe" skillPath)
++        parmeter = "--name %f --dnp-field DNP  --dest-dir ../ --layer-view F --dark-mode --no-browser"
++        ;parmeter = "--name %f --dnp-field DNP --show-fabrication --hide-silkscreen --dest-dir ../ibom --layer-view F --dark-mode --no-browser"
++        sprintf(jsonDic "%s/json" getWorkingDir())
++        sprintf(jsonfile "%s/%s.json" jsonDic axlCurrentDesign())
++        (if isDir(jsonDic) && isFile(jsonfile) then
++            sprintf(cmd "%s %s \"%s\" %s" pythonexe pythonfile jsonfile parmeter)
++            res = axlRunBatchDBProgram("Translting PCB Data" cmd  ?noUnload t ?silent nil ?noProgress nil )
++            htmlfile  = sprintf(nil "%s/%s.html" getWorkingDir() axlCurrentDesign())
++            (if res && isFile(htmlfile) then
++                axlHttp(htmlfile)
++                axlRecursiveDelete(jsonDic)
++            else
++                axlMsgPut("Faield , Error during ibom generation ..")
++            );end if
++        else
++            axlMsgPut("Json Generaion Error. .")
++        );end if
++    )
++);end procedure
+\ No newline at end of file
