@@ -294,6 +294,7 @@ class MainWindow(QMainWindow):
                     if self.InteractiveHtmlBomCore:
                         self.InteractiveHtmlBomStatus = QPixmap(self.redirect_res("./src/done.png"))
                         self.ui.label_Emoji.setPixmap(self.InteractiveHtmlBomStatus)
+                        self.ui.label_status.setText("InteractiveHtml Install Done!")
         else:
             self.error = f"self.allowInstall_InteractiveHtml:{self.allowInstall_InteractiveHtml}"
             self.error_product_interactiveHtml()
