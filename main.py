@@ -193,9 +193,6 @@ class MainWindow(QMainWindow):
             self.error_product_interactiveHtml()
 
     def submit_CheckEnvironment_Interactive(self):
-        self.error = "test"
-        self.error_product_interactiveHtml()
-
         if "HOME" in os.environ:
             target_path = os.path.join(os.environ['HOME'], "pcbenv")
         else:
