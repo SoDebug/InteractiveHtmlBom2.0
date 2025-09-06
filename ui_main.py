@@ -48,7 +48,13 @@ class Ui_MainWindow(object):
 
         self.label_info = QLabel(self.PendingActivation)
         self.label_info.setObjectName(u"label_info")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_info.sizePolicy().hasHeightForWidth())
+        self.label_info.setSizePolicy(sizePolicy)
         self.label_info.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label_info.setWordWrap(True)
 
         self.verticalLayout_ProductSelect.addWidget(self.label_info)
 
@@ -136,7 +142,10 @@ class Ui_MainWindow(object):
 
         self.label_status = QLabel(self.InteractiveHtmlSetup)
         self.label_status.setObjectName(u"label_status")
+        sizePolicy.setHeightForWidth(self.label_status.sizePolicy().hasHeightForWidth())
+        self.label_status.setSizePolicy(sizePolicy)
         self.label_status.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label_status.setWordWrap(True)
 
         self.verticalLayout_setup.addWidget(self.label_status)
 

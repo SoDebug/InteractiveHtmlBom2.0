@@ -5,15 +5,15 @@ import winreg
 import re
 import os
 import uuid
-from sys import exception
-from pathlib import Path
+import traceback
+
 
 from ui_main import Ui_MainWindow
-
-from PySide6.QtCore import QThread, Signal
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox
+from PySide6.QtWidgets import QApplication, QMainWindow
 
+plugins_path = os.path.join(os.path.dirname(__file__), "plugins")
+os.environ['QT_PLUGIN_PATH'] = plugins_path
 
 class MainWindow(QMainWindow):
 
@@ -48,6 +48,8 @@ class MainWindow(QMainWindow):
         self.allowInstall_InteractiveHtml = False
         self.InteractiveHtmlBomLoader = False
         self.InteractiveHtmlBomCore = False
+        self.ui.product_emoji.setPixmap(QPixmap(self.redirect_res("./src/PendingActivation.png")))
+        self.ui.label_Emoji.setPixmap(QPixmap(self.redirect_res("./src/welcom.png")))
 
     def setup_page(self):
         self.page_selectProduct = 0
@@ -59,13 +61,12 @@ class MainWindow(QMainWindow):
         self.ui.pushButton_InstallPatch.clicked.connect(self.submit_install_patch)
 
     def setup_git(self):
-        self.original_dir = os.getcwd()
+        self.original_dir = os.path.dirname(__file__)
         # get git path
         self.git_path = os.path.join(self.original_dir, "Main", "gitExe", "bin", "git.exe")
         # ack git path
         if not os.path.exists(self.git_path):
             raise FileNotFoundError(f"git.exe not found at {self.git_path}")
-
         self.cmd = f'"{self.git_path}" rev-parse --short HEAD'
 
     def submit_product(self):
@@ -179,9 +180,14 @@ class MainWindow(QMainWindow):
             self.error_product_interactiveHtml()
 
     def interactiveHtml_generatePath(self):
-        self.copy_file(self.redirect_res("./Main/exportJson/exportJson.il"),
-                       self.redirect_res("./Main/exportJson/exportJson.il.bak"))
-        self.copy_file(self.redirect_res("./Main/autoFill.patch"), self.redirect_res("./Main/exportJson/autoFill.patch"))
+        try:
+            self.copy_file(self.redirect_res("./Main/exportJson/exportJson.il"),
+                           self.redirect_res("./Main/exportJson/exportJson.il.bak"))
+            self.copy_file(self.redirect_res("./Main/autoFill.patch"), self.redirect_res("./Main/exportJson/autoFill.patch"))
+        except Exception as error:
+            self.InteractiveHtmlBomIDPatch = False
+            self.error = str(error)
+            self.error_product_interactiveHtml()
         try:
             os.chdir(self.redirect_res("./Main/exportJson"))
             path_cmd = f'"{self.git_path}" apply autoFill.patch'
@@ -290,12 +296,24 @@ class MainWindow(QMainWindow):
 
     def submit_install_patch(self):
         if self.allowInstall_InteractiveHtml:
-            self.interactiveHtml_generatePath()
+            try:
+                self.interactiveHtml_generatePath()
+            except Exception as error:
+                self.error = f"Failed to generate Interactive Html Bom installation path. details: {error}"
+                self.error_product_interactiveHtml()
             if self.InteractiveHtmlBomIDPatch:
-                self.install_loader(self.ui.lineEdit_CadenceDirectory.text())
+                try:
+                    self.install_loader(self.ui.lineEdit_CadenceDirectory.text())
+                except Exception as error:
+                    self.error = f"Failed to install Interactive Html Bom Loader. details: {traceback.format_exc()}"
+                    self.error_product_interactiveHtml()
                 if self.InteractiveHtmlBomLoader:
-                    work_dir = os.getcwd()
-                    self.install_core(work_dir, self.ui.lineEdit_CadenceDirectory.text())
+                    try:
+                        work_dir = os.path.dirname(__file__)
+                        self.install_core(work_dir, self.ui.lineEdit_CadenceDirectory.text())
+                    except Exception as error:
+                        self.error = f"Failed to install Interactive Html Bom Core. details: {traceback.format_exc()}"
+                        self.error_product_interactiveHtml()
                     if self.InteractiveHtmlBomCore:
                         self.InteractiveHtmlBomStatus = QPixmap(self.redirect_res("./src/done.png"))
                         self.ui.label_Emoji.setPixmap(self.InteractiveHtmlBomStatus)
@@ -311,12 +329,16 @@ class MainWindow(QMainWindow):
         self.ui.label_Emoji.setPixmap(self.product_pixMap)
 
     def redirect_res(self, src_path: str):
-        if hasattr(sys, '_MEIPASS'):
-            return os.path.join(getattr(sys, '_MEIPASS'), src_path)
-        return src_path
+        # if hasattr(sys, '_MEIPASS'):
+        #     return os.path.join(getattr(sys, '_MEIPASS'), src_path)
+        dst_path = os.path.join(os.path.dirname(__file__), src_path)
+        return dst_path
+
+
 
 if __name__ == "__main__":
     # check_environment()
+
     app = QApplication(sys.argv)
 
     window = MainWindow()
