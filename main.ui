@@ -17,6 +17,9 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="1">
      <widget class="QStackedWidget" name="stackedWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
       <widget class="QWidget" name="PendingActivation">
        <layout class="QGridLayout" name="gridLayout_5">
         <property name="leftMargin">
@@ -379,10 +382,10 @@ select the product</string>
              <widget class="QLabel" name="CadenceInteractiveHtmlAbout">
               <property name="text">
                <string>UI
-github@SoDebug
+github.com@SoDebug
 Credits
-github@openscopeproject\InteractiveHtmlBom
-github@juulsA\exportJson</string>
+github.com@openscopeproject\InteractiveHtmlBom
+github.com@juulsA\exportJson</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignmentFlag::AlignCenter</set>

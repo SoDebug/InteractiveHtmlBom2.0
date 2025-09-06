@@ -243,6 +243,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
+        self.stackedWidget.setCurrentIndex(0)
+
+
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
@@ -272,9 +275,9 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(shortcut)
         self.pushButton_InstallPatch.setText(QCoreApplication.translate("MainWindow", u"Install", None))
         self.CadenceInteractiveHtmlAbout.setText(QCoreApplication.translate("MainWindow", u"UI\n"
-"github@SoDebug\n"
+"github.com@SoDebug\n"
 "Credits\n"
-"github@openscopeproject\\InteractiveHtmlBom\n"
-"github@juulsA\\exportJson", None))
+"github.com@openscopeproject\\InteractiveHtmlBom\n"
+"github.com@juulsA\\exportJson", None))
     # retranslateUi
 
