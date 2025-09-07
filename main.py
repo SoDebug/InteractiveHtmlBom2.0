@@ -516,8 +516,7 @@ class MainWindow(QMainWindow):
     def exec_user(self):
         code = self.ui.textEdit_CommandInput.toPlainText()
         if code.strip():
-            result = self.safe_exec(code)
-            return result
+            self.safe_exec(code)
 
 
 if __name__ == "__main__":
