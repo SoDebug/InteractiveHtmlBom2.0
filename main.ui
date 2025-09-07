@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>813</width>
     <height>651</height>
    </rect>
   </property>
@@ -167,7 +167,12 @@ select the product</string>
               </property>
               <item>
                <property name="text">
-                <string>InteractiveHtml</string>
+                <string>InteractiveHtml(Cadence)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Inverting Hysteresis Comparator</string>
                </property>
               </item>
              </widget>
@@ -416,6 +421,262 @@ github.com@juulsA\exportJson</string>
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="PN_16702A">
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="0" column="0">
+         <widget class="QTabWidget" name="tabWidget">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="TLV185x_Calculator">
+           <attribute name="title">
+            <string>TLV185x Calculator</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_7">
+            <item row="0" column="0">
+             <widget class="QGroupBox" name="CalculatorHy">
+              <property name="title">
+               <string>Calculator Hy From Variables(R1、R2、R3)</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_9">
+               <item row="0" column="0">
+                <layout class="QGridLayout" name="gridLayout_10">
+                 <item row="0" column="1">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox_CalculatorHy_Vref">
+                   <property name="decimals">
+                    <number>5</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="0">
+                  <widget class="QLabel" name="label_CalculatorHy_TH">
+                   <property name="text">
+                    <string>Total Hysteresis(V)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_CalculatorHy_Vref">
+                   <property name="text">
+                    <string>Vref(V)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox_CalculatorHy_r3">
+                   <property name="maximum">
+                    <double>9999999.990000000223517</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="label_CalculatorHy_H2L">
+                   <property name="text">
+                    <string>High-to-Low Trip Voltage(V)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="1">
+                  <widget class="QLineEdit" name="lineEdit_CalculatorHy_L2H"/>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="label_CalculatorHy_L2H">
+                   <property name="text">
+                    <string>Low-to-High Trip Voltage(V)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QLineEdit" name="lineEdit_CalculatorHy_H2L"/>
+                 </item>
+                 <item row="6" column="1">
+                  <widget class="QLineEdit" name="lineEdit_CalculatorHy_TH"/>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox_CalculatorHy_r2">
+                   <property name="maximum">
+                    <double>9999999.990000000223517</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_CalculatorHy_r3">
+                   <property name="text">
+                    <string>R3(ohm)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_CalculatorHy_r2">
+                   <property name="text">
+                    <string>R2(ohm)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_CalculatorHy_r1">
+                   <property name="text">
+                    <string>R1(ohm)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox_CalculatorHy_r1">
+                   <property name="maximum">
+                    <double>9999999.990000000223517</double>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="0">
+                <widget class="QPushButton" name="pushButton_CalculatorHy_RUN">
+                 <property name="text">
+                  <string>RUN</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QGroupBox" name="CalculatorVar">
+              <property name="title">
+               <string>Calculator Variables(R1、R2、R3) from Hy</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_11">
+               <item row="0" column="0">
+                <layout class="QGridLayout" name="gridLayout_8">
+                 <item row="3" column="1">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox_CalculatorVar_r3">
+                   <property name="maximum">
+                    <double>9999999.990000000223517</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="label_CalculatorVar_H2L">
+                   <property name="text">
+                    <string>High-to-Low Trip Voltage(V)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="0">
+                  <widget class="QLabel" name="label_CalculatorVar_TH">
+                   <property name="text">
+                    <string>Total Hysteresis(V)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox_CalculatorVar_r1">
+                   <property name="maximum">
+                    <double>9999999.990000000223517</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_CalculatorVar_r3">
+                   <property name="text">
+                    <string>R3(ohm)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox_CalculatorVar_r2">
+                   <property name="maximum">
+                    <double>9999999.990000000223517</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_CalculatorVar_r2">
+                   <property name="text">
+                    <string>R2(ohm)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_CalculatorVar_r1">
+                   <property name="text">
+                    <string>R1(ohm)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="label_CalculatorVar_L2H">
+                   <property name="text">
+                    <string>Low-to-High Trip Voltage(V)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_CalculatorVar_Vref">
+                   <property name="text">
+                    <string>Vref(V)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="2">
+                  <widget class="QCheckBox" name="checkBox_CalculatorVar_r1">
+                   <property name="text">
+                    <string>Uss Fixed Value</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="2">
+                  <widget class="QCheckBox" name="checkBox_CalculatorVar_r2">
+                   <property name="text">
+                    <string>Uss Fixed Value</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="2">
+                  <widget class="QCheckBox" name="checkBox_CalculatorVar_r3">
+                   <property name="text">
+                    <string>Uss Fixed Value</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1" colspan="2">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox_CalculatorVar_Vref">
+                   <property name="decimals">
+                    <number>5</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="1" colspan="2">
+                  <widget class="QLineEdit" name="lineEdit_CalculatorVar_TH"/>
+                 </item>
+                 <item row="4" column="1" colspan="2">
+                  <widget class="QLineEdit" name="lineEdit_CalculatorVar_H2L"/>
+                 </item>
+                 <item row="5" column="1" colspan="2">
+                  <widget class="QLineEdit" name="lineEdit_CalculatorVar_L2H"/>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="0">
+                <widget class="QPushButton" name="pushButton_CalculatorVar_RUN">
+                 <property name="text">
+                  <string>RUN</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="PythonExec">
+           <attribute name="title">
+            <string>Python Exec</string>
+           </attribute>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -425,7 +686,7 @@ github.com@juulsA\exportJson</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>813</width>
      <height>33</height>
     </rect>
    </property>

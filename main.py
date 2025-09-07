@@ -6,6 +6,8 @@ import re
 import os
 import uuid
 import traceback
+import sympy
+from sympy import Symbol, solve
 
 
 from ui_main import Ui_MainWindow
@@ -20,6 +22,8 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         # initial var
+        self.original_dir = None
+        self.page_tlv185x = None
         self.InteractiveHtmlBomStatus = None
         self.InteractiveHtmlBomCore = None
         self.InteractiveHtmlBomLoader = None
@@ -50,15 +54,40 @@ class MainWindow(QMainWindow):
         self.InteractiveHtmlBomCore = False
         self.ui.product_emoji.setPixmap(QPixmap(self.redirect_res("./src/PendingActivation.png")))
         self.ui.label_Emoji.setPixmap(QPixmap(self.redirect_res("./src/welcom.png")))
+        self.ui.doubleSpinBox_CalculatorHy_r1.setValue(205000.00)
+        self.ui.doubleSpinBox_CalculatorHy_r2.setValue(100000.00)
+        self.ui.doubleSpinBox_CalculatorHy_r3.setValue(820000.00)
+        self.ui.doubleSpinBox_CalculatorHy_Vref.setValue(3.30)
+        self.ui.lineEdit_CalculatorHy_L2H.setEnabled(False)
+        self.ui.lineEdit_CalculatorHy_H2L.setEnabled(False)
+        self.ui.lineEdit_CalculatorHy_TH.setEnabled(False)
+        self.ui.lineEdit_CalculatorVar_TH.setEnabled(False)
+        # set default checkbox
+        self.ui.doubleSpinBox_CalculatorVar_Vref.setValue(3.3)
+        self.ui.doubleSpinBox_CalculatorVar_r2.setValue(100000)
+        self.ui.lineEdit_CalculatorVar_H2L.setText(str(1.25))
+        self.ui.lineEdit_CalculatorVar_L2H.setText(str(1))
+        self.ui.checkBox_CalculatorVar_r2.setChecked(True)
+        self.ui.doubleSpinBox_CalculatorVar_r2.setEnabled(True)
+        self.ui.checkBox_CalculatorVar_r1.setChecked(False)
+        self.ui.doubleSpinBox_CalculatorVar_r1.setEnabled(False)
+        self.ui.checkBox_CalculatorVar_r3.setChecked(False)
+        self.ui.doubleSpinBox_CalculatorVar_r3.setEnabled(False)
 
     def setup_page(self):
         self.page_selectProduct = 0
         self.page_interactiveHtml = 1
+        self.page_tlv185x = 2
 
     def setup_slot(self):
         self.ui.pushButton_SelectProduct.clicked.connect(self.submit_product)
         self.ui.pushButton_CheckEnvironment.clicked.connect(self.submit_CheckEnvironment_Interactive)
         self.ui.pushButton_InstallPatch.clicked.connect(self.submit_install_patch)
+        self.ui.pushButton_CalculatorVar_RUN.clicked.connect(self.submit_calculator_var)
+        self.ui.pushButton_CalculatorHy_RUN.clicked.connect(self.submit_calculator_hy)
+        self.ui.checkBox_CalculatorVar_r1.checkStateChanged.connect(self.fixCheckBox_CalculatorVar_r1)
+        self.ui.checkBox_CalculatorVar_r2.checkStateChanged.connect(self.fixCheckBox_CalculatorVar_r2)
+        self.ui.checkBox_CalculatorVar_r3.checkStateChanged.connect(self.fixCheckBox_CalculatorVar_r3)
 
     def setup_git(self):
         self.original_dir = os.path.dirname(__file__)
@@ -75,6 +104,10 @@ class MainWindow(QMainWindow):
                 self.setWindowTitle("Production: Interactive Html Bom Installer")
                 self.ui.stackedWidget.setCurrentIndex(self.page_interactiveHtml)
                 self.ui.pushButton_CheckEnvironment.setEnabled(True)
+            elif self.ui.comboBox_SelectProduct.currentIndex() == 1:
+                self.setWindowTitle("Production: TLV185X Caculator")
+                self.ui.stackedWidget.setCurrentIndex(self.page_tlv185x)
+                # self.ui.pushButton_CheckEnvironment.setEnabled(True)
             else:
                 self.product_pixMap = QPixmap(self.redirect_res("./src/Thinking.png"))
                 self.ui.product_emoji.setPixmap(self.product_pixMap)
@@ -333,6 +366,89 @@ class MainWindow(QMainWindow):
         #     return os.path.join(getattr(sys, '_MEIPASS'), src_path)
         dst_path = os.path.join(os.path.dirname(__file__), src_path)
         return dst_path
+
+    def resistors_parallel(self, r1: int, r2: int):
+        total_value = 1 / (1 / r1 + 1 / r2)
+        return total_value
+
+    def submit_calculator_var(self):
+        L2H = float(self.ui.lineEdit_CalculatorVar_L2H.text())
+        H2L = float(self.ui.lineEdit_CalculatorVar_H2L.text())
+        self.ui.lineEdit_CalculatorVar_TH.setText(str(format(H2L-L2H, ".3f")))
+        if self.ui.checkBox_CalculatorVar_r1.isChecked():
+            x = self.ui.doubleSpinBox_CalculatorVar_r1.value()
+            y = Symbol('R2')
+            z = Symbol('R3')
+            v = float(self.ui.doubleSpinBox_CalculatorVar_Vref.value())
+            fun1 = v * y * (x + z) / (x * z + y * (x + z)) - H2L
+            fun2 = v * y * z / (y * z + x * (y + z)) - L2H
+            z = solve([fun1, fun2], [y, z])
+            # Render the calculation results to the UI
+            self.ui.doubleSpinBox_CalculatorVar_r2.setValue(float(format(z[0][0], ".3f")))
+            self.ui.doubleSpinBox_CalculatorVar_r3.setValue(float(format(z[0][1], ".3f")))
+        elif self.ui.checkBox_CalculatorVar_r2.isChecked():
+            x = Symbol('R1')
+            y = self.ui.doubleSpinBox_CalculatorVar_r2.value()
+            z = Symbol('R3')
+            v = float(self.ui.doubleSpinBox_CalculatorVar_Vref.value())
+            fun1 = v * y * (x + z) / (x * z + y * (x + z)) - H2L
+            fun2 = v * y * z / (y * z + x * (y + z)) - L2H
+            z = solve([fun1, fun2], [x, z])
+            # Render the calculation results to the UI
+            self.ui.doubleSpinBox_CalculatorVar_r1.setValue(float(format(z[0][0], ".3f")))
+            self.ui.doubleSpinBox_CalculatorVar_r3.setValue(float(format(z[0][1], ".3f")))
+        elif self.ui.checkBox_CalculatorVar_r3.isChecked():
+            x = Symbol('R1')
+            y = Symbol('R2')
+            z = self.ui.doubleSpinBox_CalculatorVar_r3.value()
+            v = float(self.ui.doubleSpinBox_CalculatorVar_Vref.value())
+            fun1 = v * y * (x + z) / (x * z + y * (x + z)) - H2L
+            fun2 = v * y * z / (y * z + x * (y + z)) - L2H
+            z = solve([fun1, fun2], [x, y])
+            # Render the calculation results to the UI
+            self.ui.doubleSpinBox_CalculatorVar_r1.setValue(float(format(z[0][0], ".3f")))
+            self.ui.doubleSpinBox_CalculatorVar_r2.setValue(float(format(z[1][1], ".3f")))
+
+    def fixCheckBox_CalculatorVar_r1(self):
+        if self.ui.checkBox_CalculatorVar_r1.isChecked():
+            self.ui.doubleSpinBox_CalculatorVar_r1.setEnabled(True)
+            self.ui.checkBox_CalculatorVar_r2.setChecked(False)
+            self.ui.doubleSpinBox_CalculatorVar_r2.setEnabled(False)
+            self.ui.checkBox_CalculatorVar_r3.setChecked(False)
+            self.ui.doubleSpinBox_CalculatorVar_r3.setEnabled(False)
+
+    def fixCheckBox_CalculatorVar_r2(self):
+        if self.ui.checkBox_CalculatorVar_r2.isChecked():
+            self.ui.doubleSpinBox_CalculatorVar_r2.setEnabled(True)
+            self.ui.checkBox_CalculatorVar_r1.setChecked(False)
+            self.ui.doubleSpinBox_CalculatorVar_r1.setEnabled(False)
+            self.ui.checkBox_CalculatorVar_r3.setChecked(False)
+            self.ui.doubleSpinBox_CalculatorVar_r3.setEnabled(False)
+
+    def fixCheckBox_CalculatorVar_r3(self):
+        if self.ui.checkBox_CalculatorVar_r3.isChecked():
+            self.ui.doubleSpinBox_CalculatorVar_r3.setEnabled(True)
+            self.ui.checkBox_CalculatorVar_r1.setChecked(False)
+            self.ui.doubleSpinBox_CalculatorVar_r1.setEnabled(False)
+            self.ui.checkBox_CalculatorVar_r2.setChecked(False)
+            self.ui.doubleSpinBox_CalculatorVar_r2.setEnabled(False)
+
+    def submit_calculator_hy(self):
+        x = self.ui.doubleSpinBox_CalculatorHy_r1.value()
+        y = self.ui.doubleSpinBox_CalculatorHy_r2.value()
+        z = self.ui.doubleSpinBox_CalculatorHy_r3.value()
+        v = self.ui.doubleSpinBox_CalculatorHy_Vref.value()
+        L2H = Symbol('L2H')
+        H2L = Symbol('H2L')
+        fun1 = v * y / (self.resistors_parallel(x,z)+y) - H2L
+        fun2 = v * (self.resistors_parallel(y,z))/(x+self.resistors_parallel(y,z)) - L2H
+        z = solve([fun1, fun2], [L2H, H2L])
+        # Render the calculation results to the UI
+        self.ui.lineEdit_CalculatorHy_H2L.setText(str(format(z[H2L], ".3f")))
+        self.ui.lineEdit_CalculatorHy_L2H.setText(str(format(z[L2H], ".3f")))
+        self.ui.lineEdit_CalculatorHy_TH.setText(str(format(z[H2L]-z[L2H], ".3f")))
+
+
 
 
 
