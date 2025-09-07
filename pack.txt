@@ -1,0 +1,1 @@
+pyinstaller -w --add-data="./src/*;src" --add-data="./Main/*;Main"  --add-data="./plugins/*;plugins" main.py --icon="E:\Project\InteractiveHtmlBom\src\icon.ico" --version-file="E:\Project\InteractiveHtmlBom\file_version_info.txt" --upx-dir "D:\installed\upx"
