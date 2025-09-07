@@ -475,6 +475,8 @@ class MainWindow(QMainWindow):
                 "min": min,
                 "sum": sum,
                 "math": __import__("math"),  # Allow math module
+                "sympy": __import__("sympy"),  # Allow sympy module
+                "re": __import__("re"),  # Allow re module
                 "open": self.restricted_open,  # Custom restricted open function
             }
         }
