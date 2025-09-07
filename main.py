@@ -6,7 +6,7 @@ import re
 import os
 import uuid
 import traceback
-import sympy
+import io
 from sympy import Symbol, solve
 
 
@@ -88,6 +88,7 @@ class MainWindow(QMainWindow):
         self.ui.checkBox_CalculatorVar_r1.checkStateChanged.connect(self.fixCheckBox_CalculatorVar_r1)
         self.ui.checkBox_CalculatorVar_r2.checkStateChanged.connect(self.fixCheckBox_CalculatorVar_r2)
         self.ui.checkBox_CalculatorVar_r3.checkStateChanged.connect(self.fixCheckBox_CalculatorVar_r3)
+        self.ui.pushButton_Exec.clicked.connect(self.exec_user)
 
     def setup_git(self):
         self.original_dir = os.path.dirname(__file__)
@@ -448,8 +449,75 @@ class MainWindow(QMainWindow):
         self.ui.lineEdit_CalculatorHy_L2H.setText(str(format(z[L2H], ".3f")))
         self.ui.lineEdit_CalculatorHy_TH.setText(str(format(z[H2L]-z[L2H], ".3f")))
 
+    def restricted_open(self, filename, mode='r'):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        full_path = os.path.abspath(filename)
+        if not full_path.startswith(current_dir):
+            raise PermissionError("Unauthorized Access!")
+        return open(filename, mode)
 
+    def safe_exec(self, code):
+        # Create a safe globals dictionary
+        safe_globals = {
+            "__builtins__": {
+                "print": print,
+                "len": len,
+                "range": range,
+                "int": int,
+                "float": float,
+                "str": str,
+                "list": list,
+                "dict": dict,
+                "set": set,
+                "tuple": tuple,
+                "abs": abs,
+                "max": max,
+                "min": min,
+                "sum": sum,
+                "math": __import__("math"),  # Allow math module
+                "open": self.restricted_open,  # Custom restricted open function
+            }
+        }
 
+        # Capture stdout to get print outputs
+        output = io.StringIO()
+        sys.stdout = output  # Redirect stdout to capture print statements
+
+        try:
+            # Execute the code
+            exec(code, safe_globals)
+
+            # Get the captured output
+            captured_output = output.getvalue()
+
+            # Optionally, collect variables defined in the code
+            result_vars = {k: v for k, v in safe_globals.items() if k not in safe_globals["__builtins__"]}
+
+            # Combine the printed output and defined variables
+            result = {
+                "output": captured_output,
+                "variables": result_vars
+            }
+
+            # Display or store the result
+            self.ui.textEdit_CommandOutput.setText(f"Exec Done!\nOutput:\n{captured_output}\nVariables:\n{result_vars}")
+            return result  # Return the result for further use if needed
+
+        except Exception:
+            self.error = f"Failed to execute DIY Command. Details:\n{traceback.format_exc()}"
+            self.ui.textEdit_CommandOutput.setText(self.error)
+            return {"output": "", "variables": {}, "error": self.error}
+
+        finally:
+            # Restore stdout
+            sys.stdout = sys.__stdout__
+            output.close()
+
+    def exec_user(self):
+        code = self.ui.textEdit_CommandInput.toPlainText()
+        if code.strip():
+            result = self.safe_exec(code)
+            return result
 
 
 if __name__ == "__main__":

@@ -18,8 +18,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
     QGridLayout, QGroupBox, QLabel, QLineEdit,
     QMainWindow, QMenuBar, QPushButton, QSizePolicy,
-    QStackedWidget, QStatusBar, QTabWidget, QVBoxLayout,
-    QWidget)
+    QStackedWidget, QStatusBar, QTabWidget, QTextEdit,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -450,6 +450,44 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.TLV185x_Calculator, "")
         self.PythonExec = QWidget()
         self.PythonExec.setObjectName(u"PythonExec")
+        self.verticalLayout_3 = QVBoxLayout(self.PythonExec)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.gridLayout_12 = QGridLayout()
+        self.gridLayout_12.setObjectName(u"gridLayout_12")
+        self.groupBox = QGroupBox(self.PythonExec)
+        self.groupBox.setObjectName(u"groupBox")
+        self.gridLayout_13 = QGridLayout(self.groupBox)
+        self.gridLayout_13.setObjectName(u"gridLayout_13")
+        self.textEdit_CommandInput = QTextEdit(self.groupBox)
+        self.textEdit_CommandInput.setObjectName(u"textEdit_CommandInput")
+
+        self.gridLayout_13.addWidget(self.textEdit_CommandInput, 0, 0, 1, 1)
+
+
+        self.gridLayout_12.addWidget(self.groupBox, 0, 0, 1, 1)
+
+        self.groupBox_2 = QGroupBox(self.PythonExec)
+        self.groupBox_2.setObjectName(u"groupBox_2")
+        self.groupBox_2.setMinimumSize(QSize(0, 100))
+        self.gridLayout_14 = QGridLayout(self.groupBox_2)
+        self.gridLayout_14.setObjectName(u"gridLayout_14")
+        self.textEdit_CommandOutput = QTextEdit(self.groupBox_2)
+        self.textEdit_CommandOutput.setObjectName(u"textEdit_CommandOutput")
+
+        self.gridLayout_14.addWidget(self.textEdit_CommandOutput, 0, 0, 1, 1)
+
+
+        self.gridLayout_12.addWidget(self.groupBox_2, 1, 0, 1, 1)
+
+
+        self.verticalLayout_3.addLayout(self.gridLayout_12)
+
+        self.pushButton_Exec = QPushButton(self.PythonExec)
+        self.pushButton_Exec.setObjectName(u"pushButton_Exec")
+        self.pushButton_Exec.setMinimumSize(QSize(0, 40))
+
+        self.verticalLayout_3.addWidget(self.pushButton_Exec)
+
         self.tabWidget.addTab(self.PythonExec, "")
 
         self.gridLayout_6.addWidget(self.tabWidget, 0, 0, 1, 1)
@@ -529,6 +567,9 @@ class Ui_MainWindow(object):
         self.checkBox_CalculatorVar_r3.setText(QCoreApplication.translate("MainWindow", u"Uss Fixed Value", None))
         self.pushButton_CalculatorVar_RUN.setText(QCoreApplication.translate("MainWindow", u"RUN", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.TLV185x_Calculator), QCoreApplication.translate("MainWindow", u"TLV185x Calculator", None))
+        self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Command Input Area", None))
+        self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"Output Area", None))
+        self.pushButton_Exec.setText(QCoreApplication.translate("MainWindow", u"RUN", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.PythonExec), QCoreApplication.translate("MainWindow", u"Python Exec", None))
     # retranslateUi
 
